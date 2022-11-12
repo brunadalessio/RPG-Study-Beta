@@ -30,7 +30,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Battle')
 
 # Definir variaveis do jogo
-current_fighter = 1  # O cavaleiro vai ser o primeiro a atacar
+current_fighter = 1  # O main char vai ser o primeiro a atacar
 total_fighters = 3  # Total de lutadores
 action_cooldown = 0  # Cooldown 
 action_wait_time = 90 # Tempo de espera entre os turnos
@@ -81,7 +81,7 @@ def draw_text(text, font, text_color, x, y):
 # Carregar imagem do painel
 def draw_panel():
     screen.blit(panel_img, (0, screen_height - bottom_panel))
-    # Mostrar as stats do cavaleiro
+    # Mostrar as stats do main char
     draw_text(f'{riven.name} HP: {riven.hp}', font, red, 100, screen_height - bottom_panel + 10)
     for count, i in enumerate(renek_list):
         # Mostrar nome e vida
@@ -294,7 +294,7 @@ while run:
         renek1_health_bar.draw(renek1.hp)
         renek2_health_bar.draw(renek2.hp)
 
-        # desenhe o cavaleiro
+        # desenhe o main char
         riven.update()
         riven.draw()
 
@@ -341,7 +341,7 @@ while run:
                         # Procurar a ação do jogador
                         # Ataque
                         if attack == True and target != None:
-                            riven.attack(target) # ataca o bandido 1 
+                            riven.attack(target) # ataca o renek 1 
                             current_fighter += 1  # avança para o proximo lutador
                             action_cooldown = 0 # reseta o cooldown de espera
                             riven_aa.play()
@@ -373,7 +373,7 @@ while run:
                         action_cooldown += 1 
                         # Poção
                         if action_cooldown >= action_wait_time:
-                            # Checar se o bandido precisa curar antes de atacar
+                            # Checar se o renek precisa curar antes de atacar
                             if (renek.hp / renek.max_hp) < 0.5 and renek.potion > 0:
                                 # Checar se a poção vai curar mais do q a vida maxima
                                 if renek.max_hp - renek.hp > potion_effect:

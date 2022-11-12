@@ -65,8 +65,8 @@ def draw_panel():
     screen.blit(panel_img, (0, screen_height - bottom_panel))
 
     # Mostrar as stats do 
-    draw_text(f'{knight.name} HP: {knight.hp}', font, red, 100, screen_height - bottom_panel + 10)
-    for count, i in enumerate(bandit_list):
+    draw_text(f'{riven.name} HP: {riven.hp}', font, red, 100, screen_height - bottom_panel + 10)
+    for count, i in enumerate(renek_list):
         # Mostrar nome e vida
         draw_text(f'{i.name} HP: {i.hp}', font, red, 550, (screen_height - bottom_panel + 10) + count * 60)
 
@@ -221,17 +221,17 @@ class DamageText(pygame.sprite.Sprite):
 damage_text_group = pygame.sprite.Group()
 
 
-knight = Fighter(200, 260, 'Knight', 30, 10, 3)
-bandit1 = Fighter(550, 270, 'Bandit', 20, 6, 1)
-bandit2 = Fighter(700, 270, 'Bandit', 20, 6, 1)
+riven = Fighter(200, 260, 'Riven', 30, 10, 3)
+renek1 = Fighter(550, 270, 'renek', 20, 6, 1)
+renek2 = Fighter(700, 270, 'renek', 20, 6, 1)
 
-bandit_list = []
-bandit_list.append(bandit1)
-bandit_list.append(bandit2)
+renek_list = []
+renek_list.append(renek1)
+renek_list.append(renek2)
 
-knight_health_bar = HealthBar(100, screen_height - bottom_panel + 40, knight.hp, knight.max_hp)
-bandit1_health_bar = HealthBar(550, screen_height - bottom_panel + 40, bandit1.hp, bandit1.max_hp)
-bandit2_health_bar = HealthBar(550, screen_height - bottom_panel + 100, bandit2.hp, bandit2.max_hp)
+riven_health_bar = HealthBar(100, screen_height - bottom_panel + 40, riven.hp, riven.max_hp)
+renek1_health_bar = HealthBar(550, screen_height - bottom_panel + 40, renek1.hp, renek1.max_hp)
+renek2_health_bar = HealthBar(550, screen_height - bottom_panel + 100, renek2.hp, renek2.max_hp)
 
 # Criar butões
 potion_button = button.Button(screen, 100, screen_height - bottom_panel + 70, potion_img, 64, 64)
@@ -248,17 +248,17 @@ while run:
 
     # desenhe a imagem do painel
     draw_panel()
-    knight_health_bar.draw(knight.hp)
-    bandit1_health_bar.draw(bandit1.hp)
-    bandit2_health_bar.draw(bandit2.hp)
+    riven_health_bar.draw(riven.hp)
+    renek1_health_bar.draw(renek1.hp)
+    renek2_health_bar.draw(renek2.hp)
 
     # desenhe o 
-    knight.update()
-    knight.draw()
+    riven.update()
+    riven.draw()
 
-    for bandit in bandit_list:
-        bandit.update()
-        bandit.draw()
+    for renek in renek_list:
+        renek.update()
+        renek.draw()
 
     # desenhe o texto do dano
     damage_text_group.update()
@@ -272,46 +272,46 @@ while run:
     # Deixar o cursor do mouse visivel 
     pygame.mouse.set_visible(True)
     pos = pygame.mouse.get_pos() # passar o mouse em cima do inimigo mostra o icone de espada 
-    for count, bandit in enumerate(bandit_list):
-        if bandit.rect.collidepoint(pos):
+    for count, renek in enumerate(renek_list):
+        if renek.rect.collidepoint(pos):
             # esconder o mouse
             pygame.mouse.set_visible(False)
             # mostrar o icone da espada no lugar do cursor
             screen.blit(sword_img, pos)
-            if clicked == True and bandit.alive == True:
+            if clicked == True and renek.alive == True:
                 attack = True
-                target = bandit_list[count]
+                target = renek_list[count]
     if potion_button.draw():
         potion = True
     # Mostrar quantas poções restam
-    draw_text(str(knight.potion), font, red, 150, screen_height - bottom_panel + 70)
+    draw_text(str(riven.potion), font, red, 150, screen_height - bottom_panel + 70)
 
     if game_over == 0:
         # Ação do jogador
-        if knight.alive == True: # Se estiver vivo
+        if riven.alive == True: # Se estiver vivo
             if current_fighter == 1: # Começa a atacar
                 action_cooldown +=1 # Incrementa o tempo de ação até 90 do action_wait_time
                 if action_cooldown >= action_wait_time: # Esta pronto para atacar
                     # Procurar a ação do jogador
                     # Ataque
                     if attack == True and target != None:
-                        knight.attack(target) # ataca o bandido 1 
+                        riven.attack(target) # ataca o bandido 1 
                         current_fighter += 1  # avança para o proximo lutador
                         action_cooldown = 0 # reseta o cooldown de espera
                     # Poção
                     if potion == True:
-                        if knight.potion > 0:
+                        if riven.potion > 0:
                             # Checar se a poção vai curar mais do q a vida maxima
                             # Exemplo: se o jogador tem 30 hp, levar 5 de dano, ele vai ter 25 de hp
                             #  30  - 25 = 5 (nao eh maior que 15, entao skipa e vai pro else)
-                            if knight.max_hp - knight.hp > potion_effect:
+                            if riven.max_hp - riven.hp > potion_effect:
                                 heal_amount = potion_effect 
                             # So curar o restante dos 5, sem ultrapassar o HP max dele. 
                             else: 
-                                heal_amount = knight.max_hp - knight.hp
-                            knight.hp += heal_amount
-                            knight.potion -= 1
-                            damage_text = DamageText(knight.rect.centerx, knight.rect.y, str(heal_amount), green)
+                                heal_amount = riven.max_hp - riven.hp
+                            riven.hp += heal_amount
+                            riven.potion -= 1
+                            damage_text = DamageText(riven.rect.centerx, riven.rect.y, str(heal_amount), green)
                             damage_text_group.add(damage_text)
                             current_fighter += 1
                             action_cooldown = 0
@@ -319,27 +319,27 @@ while run:
             game_over = -1
 
         # Ação do inimigo
-        for count, bandit in enumerate(bandit_list):
+        for count, renek in enumerate(renek_list):
             if current_fighter == 2 + count:
-                if bandit.alive == True:
+                if renek.alive == True:
                     action_cooldown += 1 
                     if action_cooldown >= action_wait_time:
                         # Checar se o bandido precisa curar antes de atacar
-                        if (bandit.hp / bandit.max_hp) < 0.5 and bandit.potion > 0:
+                        if (renek.hp / renek.max_hp) < 0.5 and renek.potion > 0:
                             # Checar se a poção vai curar mais do q a vida maxima
-                            if bandit.max_hp - bandit.hp > potion_effect:
+                            if renek.max_hp - renek.hp > potion_effect:
                                 heal_amount = potion_effect 
                             else: 
-                                heal_amount = bandit.max_hp - bandit.hp
-                            bandit.hp += heal_amount
-                            bandit.potion -= 1
-                            damage_text = DamageText(bandit.rect.centerx, bandit.rect.y, str(heal_amount), green)
+                                heal_amount = renek.max_hp - renek.hp
+                            renek.hp += heal_amount
+                            renek.potion -= 1
+                            damage_text = DamageText(renek.rect.centerx, renek.rect.y, str(heal_amount), green)
                             damage_text_group.add(damage_text)
                             current_fighter += 1
                             action_cooldown = 0
                         # Ataque
                         else:
-                            bandit.attack(knight)
+                            renek.attack(riven)
                             current_fighter += 1
                             action_cooldown = 0
                 else: # Se estiver morto
@@ -349,11 +349,11 @@ while run:
             current_fighter = 1
 
     #checar se os inimigos estao mortos
-    alive_bandits = 0
-    for bandit in bandit_list:
-        if bandit.alive == True:
-            alive_bandits += 1
-    if alive_bandits == 0:
+    alive_reneks = 0
+    for renek in renek_list:
+        if renek.alive == True:
+            alive_reneks += 1
+    if alive_reneks == 0:
         game_over = 1 # todos mortos = vitoria
 
     # Checar se o jogo acabou
@@ -363,9 +363,9 @@ while run:
         if game_over == -1:
             screen.blit(defeat_img, (290, 50))
         if restart_button.draw():
-            knight.reset()
-            for bandit in bandit_list:
-                bandit.reset()
+            riven.reset()
+            for renek in renek_list:
+                renek.reset()
             current_fighter = 1
             action_cooldown = 0
             game_over = 0
